@@ -62,6 +62,8 @@ React.createElement(
 
 ### TypeScript への対応
 
+https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets
+
 TypeScript に対応するために `index.js` から `index.tsx` に変更することで、特定の関数での引数の型が `any` 型だと判断されて警告が発生してしまいます。
 
 そこで以下のように型情報を追加します。
@@ -71,6 +73,54 @@ class Board extends React.Component {
   // renderSquare(i) {
   renderSquare(i: number) {
     return <Square />;
+  }
+}
+```
+
+### Props の渡し方
+
+そのまま Props を渡すと以下のようなエラーが生じてしまう。
+
+```js
+class Square extends React.Component {
+  render() {
+    // Property 'value' does not exist on type 'Readonly<{}> & Readonly<{ children?: ReactNode; }>'
+    return <button className="square">{this.props.value}</button>;
+  }
+}
+
+class Board extends React.Component {
+  renderSquare(i: number) {
+    return <Square value={i} />;
+  }
+}
+```
+
+TypeScript を使用する場合には、親のコンポーネントから渡される Props に対してインターフェースを定義する必要がある。
+
+```js
+interface SquarePropsInterface {
+  value: number;
+}
+
+class Square extends React.Component<SquarePropsInterface> {
+  render() {
+    return <button className="square">{this.props.value}</button>;
+  }
+}
+```
+
+### コンストラクタを使った初期化
+
+JavaScript でクラスを使用する場合には、それがサブクラスの場合はコンストラクタで親クラスの `super` を呼ぶ必要があるため、以下のように渡された `props` を親クラスにも渡している。
+
+なお `props` には型を指定するようにしておく。
+
+```js
+class Square extends React.Component<SquarePropsInterface> {
+  constructor(props: SquarePropsInterface) {
+    super(props);
+    this.state = { value: null };
   }
 }
 ```
