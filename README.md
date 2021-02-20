@@ -372,45 +372,67 @@ const calculateWinner = (squares: string[]) => {
 };
 ```
 
-## Available Scripts
+### State の Game コンポーネントへのリフトアップ
 
-In the project directory, you can run:
+`Game` コンポーネントに対して適用した変更は、1 回 1 回の盤面のデータを状態管理しておくことで、過去のどのタイミングでの盤面の状態を管理できるようにしたことである。
 
-### `yarn start`
+ここでは以下のように 1 つの盤面の情報を有している `squares` 変数を配列として保持するようにしている。
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+```js
+class Game extends React.Component {
+  constructor(props) {
+    super(props);
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+    this.state = {
+      history: [
+        {
+          squares: Array(9).fill(null),
+        },
+      ],
+      xIsNext: true,
+    };
+  }
+}
+```
 
-### `yarn test`
+またレンダリングを行う際には、以下のように `Board` コンポーネントに対して以下のように現在の盤面の状態と、選択された盤面に関する情報を更新するための関数を渡せばいい。
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```js
+return (
+  // ...
+    <div className="game-board">
+      <Board
+        squares={current.squares}
+        onClick={(i) => this.handleClick(i)}
+      />
+    </div>
+  // ...
+```
 
-### `yarn build`
+TypeScript の場合には以下のように `Game` コンポーネントが管理している状態をインターフェースで定義する必要がある。
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```js
+interface GameStateInterface {
+  history: { squares: string[] }[];
+  xIsNext: boolean;
+}
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+class Game extends React.Component<any, GameStateInterface> {
+  // ...
+}
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+`Board` では Props で渡されるオブジェクトに関するインターフェースを定義する必要がある。
 
-### `yarn eject`
+```js
+interface BoardPropsInterface {
+  squares: string[];
+  onClick: (i: number) => void;
+}
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+class Board extends React.Component<BoardPropsInterface> {
+  // ...
+}
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### 過去の着手の表示
