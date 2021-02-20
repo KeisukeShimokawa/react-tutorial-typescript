@@ -287,6 +287,21 @@ class Board extends React.Component<any, BoardStateInterface> {
   }
 ```
 
+### 関数コンポーネントへの変更
+
+状態管理を行わないコンポーネントでは、クラスコンポーネントよりも関数コンポーネントで定義することで、よりコンポーネントをシンプルに記述することが可能となる。
+
+```js
+const Square = (props: SquarePropsInterface) => {
+  return (
+    // {() => this.props.onClick} --> {props.onClick}
+    <button className="square" onClick={props.onClick}>
+      {props.value}
+    </button>
+  );
+};
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
