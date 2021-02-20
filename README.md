@@ -22,6 +22,59 @@ $ https://github.com/storybookjs/presets/tree/master/packages/preset-create-reac
 $ yarn add -D @storybook/preset-create-react-app
 ```
 
+## 実装中のメモ
+
+### JSX と React 要素との対応
+
+React でコンポーネントを作成している最中に使用している JSX は Babel を通して React の表現にトランスパイルされる。
+
+例えば以下のような JSX を考える
+
+```js
+<div className="shopping-list">
+  <h1>Shopping List for {props.name}</h1>
+  <ul>
+    <li>Instagram</li>
+    <li>WhatsApp</li>
+    <li>Oculus</li>
+  </ul>
+</div>
+```
+
+これは以下のようなコードにコンパイルされる。
+
+```js
+React.createElement(
+  'div',
+  {
+    className: 'shopping-list',
+  },
+  React.createElement('h1', null, 'Shopping List for ', props.name),
+  React.createElement(
+    'ul',
+    null,
+    React.createElement('li', null, 'Instagram'),
+    React.createElement('li', null, 'WhatsApp'),
+    React.createElement('li', null, 'Oculus'),
+  ),
+);
+```
+
+### TypeScript への対応
+
+TypeScript に対応するために `index.js` から `index.tsx` に変更することで、特定の関数での引数の型が `any` 型だと判断されて警告が発生してしまいます。
+
+そこで以下のように型情報を追加します。
+
+```js
+class Board extends React.Component {
+  // renderSquare(i) {
+  renderSquare(i: number) {
+    return <Square />;
+  }
+}
+```
+
 ## Available Scripts
 
 In the project directory, you can run:
