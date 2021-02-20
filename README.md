@@ -261,7 +261,7 @@ class Square extends React.Component<SquarePropsInterface> {
 
 ```js
 interface BoardStateInterface {
-  squares: Array<string>;
+  squares: string[];
 }
 
 class Board extends React.Component<any, BoardStateInterface> {
@@ -299,6 +299,76 @@ const Square = (props: SquarePropsInterface) => {
       {props.value}
     </button>
   );
+};
+```
+
+### 順序性を有する状態管理
+
+○ × ゲームを実現するためには、ボタンをクリックするごとに表示する文字を変更する必要がある。
+
+この変更はゲームの状態を管理している `Board` コンポーネント内で、どちらの手順なのかを判定するロジックを、先行が ×、後攻が ○ になるように真偽値で変更すればいいだけである。
+
+```js
+class Board extends React.Component<any, BoardStateInterface> {
+  constructor(props: any) {
+    super(props);
+
+    // 手番を判定するための真偽値を管理するようにしておく
+    this.state = {
+      squares: Array(9).fill(null),
+      xIsNext: true,
+    };
+  }
+
+  handleClick(i: number) {
+    const squares = this.state.squares.slice();
+    // 手番に応じて表示させる文字列を変更する
+    squares[i] = this.state.xIsNext ? 'X' : 'O';
+    // 手番の更新は真偽値を判定させるだけで十分である
+    this.setState({ squares: squares, xIsNext: !this.state.xIsNext });
+  }
+```
+
+もちろん今までと同様にこのままだと TypeScript でコンパイルエラーになってしまう。
+
+そこで以下のように状態管理する変数のインターフェースを変更すればいい。
+
+```js
+interface BoardStateInterface {
+  squares: string[];
+  xIsNext: boolean;
+}
+```
+
+### 勝敗の決定
+
+勝敗を決定する関数として `calculateWinner` が提供されている。
+
+あとはこの関数を、盤面を描画する際に呼び出して勝敗が決定しているのか判定させることで、勝敗が決まった場合に表示するテキストを変更することができる。
+
+また `Square` コンポーネントの `onClick` が実行された場合に呼び出される関数内で、勝敗が決まっていたりすでに状態を変更済みの場合には早期リターンするようにしておく。
+
+ここは引数の型指定などを行っておけば、TypeScript でコンパイルエラーは発生しない。
+
+```js
+const calculateWinner = (squares: string[]) => {
+  const lines = [
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6],
+  ];
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return squares[a];
+    }
+  }
+  return null;
 };
 ```
 
