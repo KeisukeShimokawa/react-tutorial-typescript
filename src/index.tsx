@@ -3,35 +3,54 @@ import ReactDOM from 'react-dom';
 import './index.css';
 
 interface SquarePropsInterface {
-  value: number;
-}
-
-interface SquareStateInterface {
   value: string;
+  onClick: () => void;
 }
 
-class Square extends React.Component<
-  SquarePropsInterface,
-  SquareStateInterface
-> {
-  constructor(props: SquarePropsInterface) {
-    super(props);
-    this.state = { value: '' };
-  }
-
+class Square extends React.Component<SquarePropsInterface> {
   render() {
     return (
-      <button className="square" onClick={() => this.setState({ value: 'X' })}>
-        {this.state.value}
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
       </button>
     );
   }
 }
 
-class Board extends React.Component {
-  // renderSquare(i) {
+interface BoardStateInterface {
+  squares: Array<string>;
+}
+
+class Board extends React.Component<any, BoardStateInterface> {
+  constructor(props: any) {
+    super(props);
+
+    /**
+     * 以下のような配列を期待している
+     * [
+     *   'O', null, 'X',
+     *   'X', 'X', 'O',
+     *   'O', null, null,
+     * ]
+     */
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  handleClick(i: number) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({ squares: squares });
+  }
+
   renderSquare(i: number) {
-    return <Square value={i} />;
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
   }
 
   render() {

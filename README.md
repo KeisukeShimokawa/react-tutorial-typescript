@@ -8,7 +8,7 @@
 $ yarn create react-app . --template typescript
 ```
 
-### Eslint 周り
+### Eslint
 
 ```bash
 $ yarn add -D eslint @typescript-eslint/{parser,eslint-plugin} prettier eslint-config-prettier eslint-plugin-react
@@ -123,6 +123,168 @@ class Square extends React.Component<SquarePropsInterface> {
     this.state = { value: null };
   }
 }
+```
+
+### コンポーネントでの状態保持
+
+React では以下のように `state` に保持している状態を他の関数から呼び出すことが可能です。
+
+```js
+class Square extends React.Component<SquarePropsInterface> {
+  constructor(props: SquarePropsInterface) {
+    super(props);
+    this.state = { value: null };
+  }
+
+  render() {
+    return (
+      <button className="square" onClick={() => this.setState({ value: 'X' })}>
+        {this.state.value}
+      </button>
+    );
+  }
+}
+```
+
+しかし TypeScript で実装を行っている場合には、Props の場合と同様に状態管理用のインターフェースも用意する必要がある。
+
+`React.Component` では以下のようなジェネリクスが提供されているので、クラス宣言時に Props と State のインターフェースを指定する必要がある。
+
+```js
+class React.Component<P = {}, S = {}, SS = any>
+```
+
+今回は `value` 変数の状態を管理するだけなので以下のように記載することが可能である。
+
+```js
+interface SquareStateInterface {
+  value: string;
+}
+
+class Square extends React.Component<
+  SquarePropsInterface,
+  SquareStateInterface,
+> {
+  // ...
+}
+```
+
+### コンポーネント間での状態共有
+
+作成した `Square` コンポーネントに対して、実際の ○ × ゲームと同様にユーザの状態を監視して交互に入力を実行させる必要がある。
+
+こうしたコンポーネント間の連携を行いたい場合、ユーザの状態を親コンポーネントに保持しておき、その情報を子コンポーネントに伝達することで実現可能である。
+
+具体的には以下のように子コンポーネントに対して関数を渡しておき、子コンポーネントは渡された関数の実行のみを行うようにしている。
+
+これで `Square` から `Board` のプライベート変数である `squares` 変数に対して関数経由で変更を通知することができるようになっている。
+
+```js
+class Board extends React.Component {
+  constructor(props) {
+    super(props);
+
+    /**
+     * 以下のような配列を期待している
+     * [
+     *   'O', null, 'X',
+     *   'X', 'X', 'O',
+     *   'O', null, null,
+     * ]
+     */
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  handleClick(i) {
+    const squares = this.state.squares.slice();
+    squares[i] = 'X';
+    this.setState({ squares: squares });
+  }
+
+  renderSquare(i: number) {
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
+  }
+  // ...
+}
+```
+
+`Square` コンポーネントは以下のように親コンポーネントから渡された自分自身の状態を表示させ、クリックされた場合に親コンポーネントの関数呼び出しを通知するのみの機能を有している。
+
+```js
+class Square extends React.Component<
+  SquarePropsInterface,
+  SquareStateInterface,
+> {
+  render() {
+    return (
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
+      </button>
+    );
+  }
+}
+```
+
+### 状態共有の TypeScript 化
+
+上記のコードはチュートリアルをそのまま実装しただけで、TypeScript に対応させていないためコンパイルエラーが発生するはずである。
+
+そこで今まで同じように Props や State のインターフェースを新しく定義する必要がある。
+
+`Square` に関しては、状態管理する変数を除去して、親コンポーネントから Props として自身の状態と実行する関数を渡される構造になっているため、以下のようにインターフェースを変更する。
+
+```js
+interface SquarePropsInterface {
+  value: string;
+  onClick: () => void;
+}
+
+class Square extends React.Component<SquarePropsInterface> {
+  render() {
+    return (
+      <button className="square" onClick={() => this.props.onClick()}>
+        {this.props.value}
+      </button>
+    );
+  }
+}
+```
+
+`Board` では、Props に関してはまだ何も情報がないため `any` 型に設定しておき、状態管理する変数である `squares` のみ以下のように定義しておけばいい。
+
+```js
+interface BoardStateInterface {
+  squares: Array<string>;
+}
+
+class Board extends React.Component<any, BoardStateInterface> {
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      squares: Array(9).fill(null),
+    };
+  }
+
+  handleClick(i: number) {
+    // ...
+  }
+
+  renderSquare(i: number) {
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    );
+  }
 ```
 
 ## Available Scripts
