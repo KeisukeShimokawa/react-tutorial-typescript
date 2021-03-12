@@ -1,0 +1,6 @@
+.board-row::after {
+  /* https://developer.mozilla.org/ja/docs/Web/CSS/clear */
+  clear: both;
+  content: '';
+  display: table;
+}
