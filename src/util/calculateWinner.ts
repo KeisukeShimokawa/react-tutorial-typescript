@@ -1,4 +1,6 @@
-export const calculateWinner = (squares: string[]) => {
+import { SquareValue } from '../types/tictactoe';
+
+const calculateWinner = (squares: SquareValue[]): SquareValue => {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -9,7 +11,7 @@ export const calculateWinner = (squares: string[]) => {
     [0, 4, 8],
     [2, 4, 6],
   ];
-  for (let i = 0; i < lines.length; i++) {
+  for (let i = 0; i < lines.length; i += 1) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
@@ -17,3 +19,5 @@ export const calculateWinner = (squares: string[]) => {
   }
   return null;
 };
+
+export default calculateWinner;
