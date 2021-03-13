@@ -1,15 +1,14 @@
 import React from 'react';
+import { SquareValue } from '../../types/tictactoe';
 import './Square.css';
 
 export interface Props {
-  value: string;
-  onClick: () => void;
+  value: SquareValue;
+  onClick(): void;
 }
 
-export const Square = ({ value, onClick }: Props): JSX.Element => {
-  return (
-    <button className="square" onClick={onClick}>
-      {value}
-    </button>
-  );
-};
+export const Square = ({ value, onClick }: Props): JSX.Element => (
+  <button type="button" className="square" onClick={onClick}>
+    {value}
+  </button>
+);
