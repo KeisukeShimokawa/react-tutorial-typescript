@@ -1,8 +1,15 @@
 # See here for image contents: https://github.com/microsoft/vscode-dev-containers/tree/v0.158.0/containers/javascript-node/.devcontainer/base.Dockerfile
 
 # [Choice] Node.js version: 14, 12, 10
-ARG VARIANT="14-buster"
-FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
+# ARG VARIANT="14-buster"
+# FROM mcr.microsoft.com/vscode/devcontainers/javascript-node:0-${VARIANT}
+
+FROM cypress/included:3.3.2
+
+RUN mv /root/.cache /home/node/.cache
+ENV CYPRESS_CACHE_FOLDER="/home/node/.cache"
+
+USER node
 
 # [Optional] Uncomment this section to install additional OS packages.
 # RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
