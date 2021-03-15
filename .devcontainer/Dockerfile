@@ -8,6 +8,7 @@ FROM cypress/included:3.3.2
 
 RUN mv /root/.cache /home/node/.cache
 ENV CYPRESS_CACHE_FOLDER="/home/node/.cache"
+ENV CYPRESS_VIDEO=false
 
 USER node
 
