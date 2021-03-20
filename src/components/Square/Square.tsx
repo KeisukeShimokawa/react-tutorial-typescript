@@ -8,7 +8,7 @@ export interface Props {
 }
 
 export const Square = ({ value, onClick }: Props): JSX.Element => (
-  <button type="button" className="square" onClick={onClick}>
+  <button className="square" onClick={onClick} data-e2e="square">
     {value}
   </button>
 );

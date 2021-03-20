@@ -21,7 +21,7 @@ export const Game = ({
     const desc = move ? `Go to move #${move}` : 'Go to game start';
     return (
       <li key={move.toString()}>
-        <button type="button" onClick={() => jumpTo(move)}>
+        <button onClick={() => jumpTo(move)} data-e2e="move">
           {desc}
         </button>
       </li>
@@ -34,7 +34,7 @@ export const Game = ({
         <Board squares={current.squares} onClick={(i) => handleClick(i)} />
       </div>
       <div className="game-info">
-        <div>{status}</div>
+        <div data-e2e="status">{status}</div>
         <ol>{moves}</ol>
       </div>
     </div>
