@@ -84,3 +84,23 @@ TuenNo8WinnerO.args = {
   handleClick: action('handleClick is done'),
   jumpTo: action('jumpTo is done'),
 };
+
+export const Draw = Template.bind({});
+Draw.args = {
+  status: 'Draw!',
+  current: { squares: ['X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', null] },
+  history: [
+    { squares: Array(9).fill(null) },
+    { squares: ['X', null, null, null, null, null, null, null, null] },
+    { squares: ['X', null, null, null, 'O', null, null, null, null] },
+    { squares: ['X', null, 'X', null, 'O', null, null, null, null] },
+    { squares: ['X', 'O', 'X', null, 'O', null, null, null, null] },
+    { squares: ['X', 'O', 'X', null, 'O', null, null, 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', null, null, 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', null, 'X', 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', 'X'] },
+  ],
+  handleClick: action('handleClick is done'),
+  jumpTo: action('jumpTo is done'),
+};

@@ -49,6 +49,10 @@ const useTicTacToe = (): [
     status = `Winner: ${winner}`;
   } else {
     status = `Next Player: ${xIsNext ? 'X' : 'O'}`;
+
+    if (history.length === 10) {
+      status = 'Draw!';
+    }
   }
 
   return [status, current, history, handleClick, jumpTo];
