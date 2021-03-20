@@ -28,10 +28,10 @@ Default.args = {
 export const TurnNo1 = Template.bind({});
 TurnNo1.args = {
   status: 'Next Player: O',
-  current: { squares: ['半', null, null, null, null, null, null, null, null] },
+  current: { squares: ['X', null, null, null, null, null, null, null, null] },
   history: [
     { squares: Array(9).fill(null) },
-    { squares: ['半', null, null, null, null, null, null, null, null] },
+    { squares: ['X', null, null, null, null, null, null, null, null] },
   ],
   handleClick: action('handleClick is done'),
   jumpTo: action('jumpTo is done'),
@@ -40,11 +40,11 @@ TurnNo1.args = {
 export const TurnNo2 = Template.bind({});
 TurnNo2.args = {
   status: 'Next Player: O',
-  current: { squares: ['半', null, null, null, '丁', null, null, null, null] },
+  current: { squares: ['X', null, null, null, 'O', null, null, null, null] },
   history: [
     { squares: Array(9).fill(null) },
-    { squares: ['半', null, null, null, null, null, null, null, null] },
-    { squares: ['半', null, null, null, '丁', null, null, null, null] },
+    { squares: ['X', null, null, null, null, null, null, null, null] },
+    { squares: ['X', null, null, null, 'O', null, null, null, null] },
   ],
   handleClick: action('handleClick is done'),
   jumpTo: action('jumpTo is done'),
@@ -53,14 +53,14 @@ TurnNo2.args = {
 export const TurnNo5 = Template.bind({});
 TurnNo5.args = {
   status: 'Next Player: O',
-  current: { squares: ['半', '丁', '半', null, '丁', null, null, '半', null] },
+  current: { squares: ['X', 'O', 'X', null, 'O', null, null, 'X', null] },
   history: [
     { squares: Array(9).fill(null) },
-    { squares: ['半', null, null, null, null, null, null, null, null] },
-    { squares: ['半', null, null, null, '丁', null, null, null, null] },
-    { squares: ['半', null, '半', null, '丁', null, null, null, null] },
-    { squares: ['半', '丁', '半', null, '丁', null, null, null, null] },
-    { squares: ['半', '丁', '半', null, '丁', null, null, '半', null] },
+    { squares: ['X', null, null, null, null, null, null, null, null] },
+    { squares: ['X', null, null, null, 'O', null, null, null, null] },
+    { squares: ['X', null, 'X', null, 'O', null, null, null, null] },
+    { squares: ['X', 'O', 'X', null, 'O', null, null, null, null] },
+    { squares: ['X', 'O', 'X', null, 'O', null, null, 'X', null] },
   ],
   handleClick: action('handleClick is done'),
   jumpTo: action('jumpTo is done'),
@@ -69,17 +69,17 @@ TurnNo5.args = {
 export const TuenNo8WinnerO = Template.bind({});
 TuenNo8WinnerO.args = {
   status: 'Winner: O',
-  current: { squares: ['半', '丁', '半', '丁', '丁', '丁', '半', '半', null] },
+  current: { squares: ['X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', null] },
   history: [
     { squares: Array(9).fill(null) },
-    { squares: ['半', null, null, null, null, null, null, null, null] },
-    { squares: ['半', null, null, null, '丁', null, null, null, null] },
-    { squares: ['半', null, '半', null, '丁', null, null, null, null] },
-    { squares: ['半', '丁', '半', null, '丁', null, null, null, null] },
-    { squares: ['半', '丁', '半', null, '丁', null, null, '半', null] },
-    { squares: ['半', '丁', '半', '丁', '丁', null, null, '半', null] },
-    { squares: ['半', '丁', '半', '丁', '丁', null, '半', '半', null] },
-    { squares: ['半', '丁', '半', '丁', '丁', '丁', '半', '半', null] },
+    { squares: ['X', null, null, null, null, null, null, null, null] },
+    { squares: ['X', null, null, null, 'O', null, null, null, null] },
+    { squares: ['X', null, 'X', null, 'O', null, null, null, null] },
+    { squares: ['X', 'O', 'X', null, 'O', null, null, null, null] },
+    { squares: ['X', 'O', 'X', null, 'O', null, null, 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', null, null, 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', null, 'X', 'X', null] },
+    { squares: ['X', 'O', 'X', 'O', 'O', 'O', 'X', 'X', null] },
   ],
   handleClick: action('handleClick is done'),
   jumpTo: action('jumpTo is done'),
